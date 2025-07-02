@@ -1,0 +1,20 @@
+from groq import Groq
+import os
+
+class GroqLLM:
+    def __init__(self, model="meta-llama/llama-4-scout-17b-16e-instruct", temperature=0.7):
+        self.client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+        self.model = model
+        self.temperature = temperature
+
+    def complete(self, prompt):
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+            temperature=self.temperature,
+            max_tokens=1024,
+            stream=False
+        )
+        return response.choices[0].message.content.strip()
